@@ -51,7 +51,7 @@ def get_sibs_files():
 
 
 
-def read_file():
+def read_file(file_id):
     
     service = build('drive', 'v3', http=http_auth)
 
@@ -59,21 +59,33 @@ def read_file():
     for f in files:
         print(f['name'], f['mimeType']) """
     
-    file_id = '1O54W07mPZPYczdfJQeG7FXwupE0otY88'
+    # file_id = '1O54W07mPZPYczdfJQeG7FXwupE0otY88'
     
     request = service.files().get_media(fileId=file_id)
     fh = io.BytesIO()
-    # fh = io.FileIO(filename, 'wb') 
+    # fh = io.FileIO(filename, 'wb')
+    # fh = io.StringIO()
+
     downloader = MediaIoBaseDownload(fh, request)
     done = False
     while done is False:
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
     
+    file = fh.getvalue()
+    # strIO = io.StringIO()
+    # strIO.write(file.decode('utf-8'))
     return(fh)
 
 
-
+if __name__ == '__main__':
+    # files = get_sibs_files()
+    # print(files)
+    x = read_file('1AXUCi6BFMtYmJu2hxN3ZjXaAtlUqK09B')
+    print('result:')
+    print('type: {}'.format(type(x)))
+    print(x.getvalue())
+    
 
 
 
